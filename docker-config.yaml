@@ -1,0 +1,24 @@
+http:
+  routers:
+    test-router:
+      rule: HostRegexp(`.*`)
+      service: test-service
+      entryPoints:
+        - web
+      middlewares:
+        - static-response
+
+  services:
+    test-service:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080
+  
+  middlewares:
+    static-response:
+      plugin:
+        static-response:
+          paths:
+          - path: /
+            content: |
+              Hello World!

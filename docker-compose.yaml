@@ -1,0 +1,25 @@
+version: '3'
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: always
+    command:
+      - --api
+      - --api.insecure=true
+      - --log.level=DEBUG
+      - --providers.file.directory=/config
+      - --providers.file.watch=true
+      - --entrypoints.web.address=:80
+      - --experimental.localPlugins.static-response.moduleName=github.com/edgeworx/static-response-plugin
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - ./docker-config.yaml:/config/docker-config.yaml
+      - ./:/plugins-local/src/github.com/edgeworx/static-response-plugin
+    networks:
+      - traefik
+
+networks:
+  traefik: {}

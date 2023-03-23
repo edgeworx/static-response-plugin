@@ -1,8 +1,7 @@
 default: lint test
 
 lint:
-	go install github.com/mgechev/revive@latest
-	revive ./...
+	golangci-lint run -v
 
 test:
 	go test -v -cover ./...

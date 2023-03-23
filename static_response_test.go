@@ -1,4 +1,4 @@
-package staticresponse_test
+package static_response_plugin_test
 
 import (
 	"context"

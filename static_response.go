@@ -1,6 +1,6 @@
-// Package staticresponse is a middleware plugin that serves inline content from a configuration.
+// Package static_response_plugin is a middleware plugin that serves inline content from a configuration.
 // Paths are matched by patterns that are defined in the configuration.
-package staticresponse
+package static_response_plugin
 
 import (
 	"context"
@@ -105,7 +105,7 @@ func (a *StaticResponse) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		if (p.Path != "" && p.Path == req.URL.Path) || (p.pathRegex != nil && p.pathRegex.MatchString(req.URL.Path)) {
 			if len(p.jsonData) > 0 {
 				rw.Header().Set("Content-Type", "application/json")
-				rw.Write(p.jsonData)
+				fmt.Fprint(rw, string(p.jsonData))
 				return
 			}
 			if err := p.template.Execute(rw, map[string]any{
