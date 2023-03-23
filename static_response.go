@@ -55,7 +55,11 @@ func (p *Path) compile() error {
 		if !strings.HasSuffix(p.Content, "\n") {
 			p.Content += "\n"
 		}
-		p.template, err = template.New(p.Path).Parse(p.Content)
+		tmplname := p.Path
+		if tmplname == "" {
+			tmplname = p.PathRegex
+		}
+		p.template, err = template.New(tmplname).Parse(p.Content)
 		if err != nil {
 			return fmt.Errorf("invalid content template: %w", err)
 		}
