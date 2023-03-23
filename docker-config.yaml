@@ -22,3 +22,8 @@ http:
           - path: /
             content: |
               Hello World!
+          - path: /config.json
+            indent: 2
+            jsonData:
+              host: example.com
+              api: api.example.com

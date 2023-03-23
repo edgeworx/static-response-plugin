@@ -51,16 +51,25 @@ func (p *Path) compile() error {
 		}
 	}
 	if p.Content != "" {
+		// Force a new line at the end of the template
+		if !strings.HasSuffix(p.Content, "\n") {
+			p.Content += "\n"
+		}
 		p.template, err = template.New(p.Path).Parse(p.Content)
 		if err != nil {
 			return fmt.Errorf("invalid content template: %w", err)
 		}
 	}
 	if len(p.JSONData) > 0 {
-		p.jsonData, err = json.MarshalIndent(p.JSONData, "", strings.Repeat(" ", p.Indent))
+		if p.Indent == 0 {
+			p.jsonData, err = json.Marshal(p.JSONData)
+		} else {
+			p.jsonData, err = json.MarshalIndent(p.JSONData, "", strings.Repeat(" ", p.Indent))
+		}
 		if err != nil {
 			return fmt.Errorf("invalid json data: %w", err)
 		}
+		p.jsonData = append(p.jsonData, []byte("\n")...)
 	}
 	return err
 }
