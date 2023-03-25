@@ -29,6 +29,8 @@ type Path struct {
 	JSONData map[string]any `json:"jsonData"`
 	// Indent is the number of spaces to indent the JSON response.
 	Indent int `json:"indent"`
+	// Status is the HTTP status code to return.
+	Status int `json:"status"`
 
 	pathRegex *regexp.Regexp
 	template  *template.Template
@@ -116,6 +118,9 @@ func New(_ context.Context, next http.Handler, config *Config, name string) (htt
 func (a *StaticResponse) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	for _, p := range a.paths {
 		if (p.Path != "" && p.Path == req.URL.Path) || (p.pathRegex != nil && p.pathRegex.MatchString(req.URL.Path)) {
+			if p.Status != 0 {
+				rw.WriteHeader(p.Status)
+			}
 			if len(p.jsonData) > 0 {
 				rw.Header().Set("Content-Type", "application/json")
 				fmt.Fprint(rw, string(p.jsonData))
